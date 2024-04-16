@@ -249,7 +249,7 @@ df <- cbind(tza_ken, ex)
 
 # Create a map object for "mean.NL1992"
 map1992 <- tm_shape(df) +
-  tm_fill(col = "mean.NL1992", palette = "seq", title = "Mean 1992") +
+  tm_fill(col = "mean.NL1992", palette = "seq", style = "jenks", title = "Mean 1992") +
   tm_layout(aes.palette = list(seq = "-YlGnBu"))
 
 # Create a map object for "mean.NL2013"

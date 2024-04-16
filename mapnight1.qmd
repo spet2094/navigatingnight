@@ -127,12 +127,37 @@ pal = rev(brewer.pal(6,"YlGnBu"))
 
 # Create the base map
 tm_shape(MENA_lights_mask) +
-  tm_raster(breaks = c(0,10,20,30,40,Inf),
+  tm_raster(breaks = c(0,20,30,40,50, Inf),
             palette = pal) +  # Plot the raster with breaks and palette
   tm_shape(MENA_adm1) +
   tm_borders(lwd = 1, col = "darkgrey") +  # Add borders to the administrative boundaries
 tm_layout(frame = FALSE, legend.outside = TRUE, legend.outside.position = "right", 
           title = "Night light intensity")  # Remove frame
+```
+
+```{r}
+
+library(tmap)
+library(RColorBrewer)
+library(scales)
+
+#| warning = FALSE
+
+# Define the palette
+pal <- rev(brewer.pal(6, "YlGnBu"))
+
+# Extract the values from MENA_lights_mask
+lights_values <- values(MENA_lights_mask)
+
+# Create the base map
+tm_shape(MENA_lights_mask) +
+  tm_raster(breaks = pretty_breaks(n = 5)(lights_values),  # Use pretty breaks
+            palette = pal) +  
+  tm_shape(MENA_adm1) +
+  tm_borders(lwd = 1, col = "darkgrey") +  
+tm_layout(frame = FALSE, legend.outside = TRUE, legend.outside.position = "right", 
+          title = "Night light intensity")
+
 ```
 :::
 
@@ -164,6 +189,7 @@ Egypt_lights_mask <- crop(MENA_lights_mask, extent(Egypt))
 Using `osmdata` package to query amenity data. We only query hospitals to keep it brief. 
 
 ```{r osm}
+assign("has_internet_via_proxy", TRUE, environment(curl::has_internet))
 # creating bounding box for Cairo
 egypt_bb <- getbb("Cairo Egypt")
 cairo <- opq(bbox = egypt_bb)
